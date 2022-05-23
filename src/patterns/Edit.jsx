@@ -223,7 +223,7 @@ const PatternInput = () => {
               }}
             >
               Episode
-            </Button>
+            </Button> 
             <Button
               color="primary"
               onClick={() => {
