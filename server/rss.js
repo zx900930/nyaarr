@@ -65,4 +65,4 @@ const route = async (req, res) => {
 
 const server = require('./server');
 
-server.get("/?page=rss*", route);
+server.get("/*", route);
