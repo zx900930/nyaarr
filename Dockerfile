@@ -15,6 +15,6 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /
 COPY --from=builder /build ./build
 COPY --from=builder /index-alpine ./index
-EXPOSE 12306
+EXPOSE 12307
 VOLUME /data
 CMD ["./index"]

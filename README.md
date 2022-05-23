@@ -42,9 +42,9 @@ $ yarn build
 $ yarn start
 ```
 
-Will start a server on port `12306`.
+Will start a server on port `12307`.
 
-At this point, you can visit `http://localhost:12306` to enter the Nyaarr web page:
+At this point, you can visit `http://localhost:12307` to enter the Nyaarr web page:
 
 ![Nyaarr web screenshot](images/screenshot1.png)
 
@@ -127,7 +127,7 @@ services:
       - PUID=1000
       - PGID=100
     expose:
-      - 12306/tcp
+      - 12307/tcp
     restart: unless-stopped
 ````
 
@@ -165,7 +165,7 @@ data/ (data file)
 
 For front-end development, you can use `yarn dev:web` , which uses `react-scripts dev` to start a Dev Server locally.
 
-In order to access the backend API, front-end development requires a running backend server, you can use `yarn dev:server` or directly `yarn start` to start one. We assume that the backend address for development is `http://localhost:12306` , you can also change the `proxy` field in `package.json` to change.
+In order to access the backend API, front-end development requires a running backend server, you can use `yarn dev:server` or directly `yarn start` to start one. We assume that the backend address for development is `http://localhost:12307` , you can also change the `proxy` field in `package.json` to change.
 
 `yarn dev:server` is also used to develop backend code. It will use [`nodemon`](https://nodemon.io/) to listen to files in `server/` and automatically restart the server when the file changes. A running instance of the frontend is not required to develop the backend.
 

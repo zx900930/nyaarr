@@ -9,7 +9,7 @@ require('./sonarr');
 require('./jwt');
 require('./api');
 
-const port = parseInt(process.env.PORT || "12306");
+const port = parseInt(process.env.PORT || "12307");
 server.listen(port, () => {
   console.log(`App started on port ${port}`);
 });
