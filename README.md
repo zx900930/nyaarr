@@ -83,7 +83,7 @@ Then click EPISODE , replace the `03` in the box with the copied content, and ge
 
 Fill in the other fields correctly, and you have completed editing a grab template.
 
-Of course, a more convenient method is to find the corresponding RSS push address on Nyaa Anime, fill in the *Remote* field, and select the desired entry in the sidebar to complete the first two steps.
+Of course, a more convenient method is to find the corresponding RSS feed on Nyaa Anime, fill in the *Remote* field, and select the desired entry in the sidebar to complete the first two steps.
 
 ---
 
@@ -136,7 +136,7 @@ This will start the application using the same `.env` file.
 ### Safety
 
 - Paths starting with `/?page=rss` will be used to convert RSS feeds.
-- `/proxy` is used to allow the front end to request Nyaa Anime's RSS push address, only URLs under the `https://nyaa.si` domain name are allowed to be requested.
+- `/proxy` is used to allow the front end to request Nyaa Anime's RSS feed, only URLs under the `https://nyaa.si` domain name are allowed to be requested.
 - `/sonarr` is used to reverse the request to the Sonarr API to avoid the client saving the API Key.
 - Paths starting with `/api` are used to access and manipulate data.
 - Other addresses will get the corresponding static files under `build/`, if not found, it will get `index.html` . Since the frontend uses the Hash Router, all frontend HTML requests should only access the `/` path.
