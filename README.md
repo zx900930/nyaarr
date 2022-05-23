@@ -135,13 +135,13 @@ This will start the application using the same `.env` file.
 
 ### Safety
 
-- Paths starting with `/RSS` will be used to convert RSS feeds.
+- Paths starting with `/?page=rss` will be used to convert RSS feeds.
 - `/proxy` is used to allow the front end to request Nyaa Anime's RSS push address, only URLs under the `https://nyaa.si` domain name are allowed to be requested.
 - `/sonarr` is used to reverse the request to the Sonarr API to avoid the client saving the API Key.
 - Paths starting with `/api` are used to access and manipulate data.
 - Other addresses will get the corresponding static files under `build/`, if not found, it will get `index.html` . Since the frontend uses the Hash Router, all frontend HTML requests should only access the `/` path.
 
-Considering the simplicity of implementation, we do not have access control on the server, you can add access control based on the above description, such as [HTTP Basic Auth](https://developer.mozilla.org/en-US/docs/ Web/HTTP/Authentication). The path under `/RSS` needs to be accessed by Sonarr, HTTP Auth cannot be used, and user data will not be directly exposed, so no access control can be considered.
+Considering the simplicity of implementation, we do not have access control on the server, you can add access control based on the above description, such as [HTTP Basic Auth](https://developer.mozilla.org/en-US/docs/ Web/HTTP/Authentication). The path under `/?page=rss` needs to be accessed by Sonarr, HTTP Auth cannot be used, and user data will not be directly exposed, so no access control can be considered.
 
 ### Development
 
