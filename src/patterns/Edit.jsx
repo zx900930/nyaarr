@@ -224,6 +224,15 @@ const PatternInput = () => {
             >
               Episode
             </Button>
+            <Button
+              color="primary"
+              onClick={() => {
+                clipboard.copy(".{0,}");
+                notify("Any String pattern copied");
+              }}
+            >
+              AnyString
+            </Button>
           </>
         ),
       }}
