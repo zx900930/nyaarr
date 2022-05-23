@@ -255,7 +255,7 @@ const PatternEdit = (props) => {
   return (
     <BusProvider>
       <Edit {...props} aside={<Aside />}>
-        <SimpleForm>
+        <SimpleForm fluid>
           <TextInput disabled source="id" />
           <RemoteInput />
           <PatternInput />
