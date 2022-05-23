@@ -1,0 +1,69 @@
+{
+  "name": "nyaarr",
+  "version": "1.0.0",
+  "private": "true",
+  "description": "Nyaarr, bridge between Nyaa Anime and Sonarr",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "dotenv node server/index.js",
+    "dev": "run-p dev:server dev:web",
+    "dev:server": "dotenv -- nodemon --signal SIGINT --watch server server/index.js",
+    "dev:web": "dotenv -- react-scripts start",
+    "build": "npm-run-all build:*",
+    "build:web": "react-scripts build",
+    "build:server": "pkg -t linux,alpine server/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@mui/material": "^5.2.7",
+    "@mui/styles": "^5.2.3",
+    "axios": "^0.24.0",
+    "clsx": "^1.1.1",
+    "dotenv-cli": "^4.0.0",
+    "express": "^4.17.1",
+    "express-jwt": "^6.1.0",
+    "global-agent": "^3.0.0",
+    "http-proxy-middleware": "^2.0.1",
+    "json-server": "^0.17.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "lowdb": "^1.0.0",
+    "qs": "^6.10.1",
+    "ra-data-json-server": "^3.14.4",
+    "react": "^17.0.2",
+    "react-admin": "^3.14.4",
+    "react-dom": "^17.0.2",
+    "react-final-form": "^6.5.3",
+    "react-hook-form": "^7.2.1",
+    "store": "^2.0.12",
+    "swr": "^1.0.1",
+    "use-clipboard-copy": "^0.2.0",
+    "xml2js": "^0.4.23"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "npm-run-all": "^4.1.5",
+    "pkg": "^5.5.1",
+    "react-scripts": "^5.0.0"
+  },
+  "resolutions": {
+    "react-admin/@material-ui/core": "^4.12.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "proxy": "http://localhost:12306"
+}
