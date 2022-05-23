@@ -4,7 +4,7 @@ name: Docker Image CI
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
 
 jobs:
   docker:
@@ -18,7 +18,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
       - 
          name: Checkout
-         uses: actions/checkout@master
+         uses: actions/checkout@main
       - 
          name: Change Screenshots Links
          run: sed -i 's#截图](images/#截图](https://github.com/std4453/mikanarr/raw/master/images/#g' ./README.md
