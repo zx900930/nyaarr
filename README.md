@@ -2,23 +2,21 @@
 
 [![Docker Image CI](https://github.com/zx900930/nyaarr/actions/workflows/main.yml/badge.svg)](https://github.com/zx900930/nyaarr/actions/workflows/main.yml)
 
-*Nyaarr* 由 *Nyaa Anime* 与 *Sonarr* 混合而成，负责打通两者之间的桥梁，作为自动下载动画的关键一步存在。
+*Nyaarr* is a bridge between *Nyaa Anime* and *Sonarr*, playing an important role to convert the anime release titles to normalized sonarr format.
 
-关于整个媒体栈的详细信息，请参考 [我的博客](https://blog.std4453.com:444/nas-from-zero-media-part/) ，本文件仅阐述项目的使用方法。
+This document only describes how to use the project.
 
-## 简介
+## Introduction
 
-[Sonarr](https://sonarr.tv/) 基于 RSS 推送寻找符合需求的发布（*Release*）并下载，然而， [Nyaa Anime](https://nyaa.si/) 的 RSS 推送格式与 Sonarr 接受的格式并不兼容，因此我们在前者的返回格式上进行变换，以符合后者的要求。
+[Sonarr](https://sonarr.tv/) based on RSS feeds to find releases (*Release*) that meet your needs and download them, It identifies the corresponding episodes, languages, and formats based on the title (*Title*) of the RSS feed. However, the identification algorithm and episode mapping is not perfect and cant be customized, especially for Japanese animation translation, which is poorly standardized. Therefore, we rewrite the titles to ensure that it can be correctly recognized by Sonarr.
 
-此外， Sonarr 基于 RSS 推送项目的标题（*Title*）对项目对应的剧集、语言、制式进行识别，然而该识别算法并非完美，在标准化程度较差的日本动画中译领域尤甚，因此我们也对标题进行变换，以保证能够被 Sonarr 正确识别并抓取。
+This process requires the user to provide the template format of the title and the corresponding language and media format information. In order to facilitate management, we provide a simple front-end/back-end system.
 
-该过程要求用户提供标题的模板格式以及对应的语言、制式信息，为了方便管理，我们提供了一套简单的前/后端系统用于操作。
+## Use
 
-## 使用
+First you need a functioning and accessible Sonarr instance, and [get the API Key](https://github.com/Sonarr/Sonarr/wiki/API).
 
-首先你需要一个正常运行且可访问的 Sonarr 实例，并 [获取 API Key](https://github.com/Sonarr/Sonarr/wiki/API) 。
-
-接着，创建并填写 `.env` 文件，如：
+Next, create the `.env` file:
 
 ```env
 SONARR_API_KEY=aaaabbbbccccddddeeeeffff1145141919810
@@ -28,96 +26,96 @@ ADMIN_PASSWORD=your_admin_password
 BASE_URL=https://nyaa.si
 ```
 
-`ADMIN_USERNAME` 和 `ADMIN_PASSWORD` 用于登陆系统，未登陆无法访问。
+`ADMIN_USERNAME` and `ADMIN_PASSWORD` are used to log in to the system, Nyaarr cannot be accessed without logging in.
 
-然后在data目录创建jwk key
+Then create a jwk key under the data directory:
 
 ```bash
 ssh-keygen -t rsa -b 4096 -E SHA512 -m PEM -f jwt.key
 openssl rsa -in jwt.key -pubout -outform PEM -out jwt.key.pub
 ```
 
-然后运行（需要 Node.js 环境）：
+Then run this project (requires Node.js environment):
 
 ```bash
 $ yarn build
 $ yarn start
 ```
 
-将会在 `12306` 端口运行服务器。
+Will start a server on port `12306`.
 
-此时，可以访问 `http://localhost:12306` 进入 Nyaarr 网页端：
+At this point, you can visit `http://localhost:12306` to enter the Nyaarr web page:
 
-![Nyaarr 网页端截图](images/screenshot1.png)
+![Nyaarr web screenshot](images/screenshot1.png)
 
-在网页中，你可以搜索、排序、添加、删除、编辑条目，主要需要填写的字段包括：
+In the web page, you can search, sort, add, delete, and edit items. The main fields that need to be filled include:
 
-- `Remote`: 远程地址，即 Nyaa Anime 中对应剧集 （可以包含字幕组） 的 RSS 推送地址，选填。
-- `Pattern`: 标题模板，只有匹配至少一条的项目会被返回，模板本身为 [正则表达式](https://en.wikipedia.org/wiki/Regular_expression) ，表达式中需要包含 [命名捕获组](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Groups_and_Ranges) （即 `(?<episode>\d+)` )，用于提供剧集信息。
-- `Series`: 系列名称，网页端会从 Sonarr 获取所有系列名称，如果没有找到需要的系列，可能需要首先在 Sonarr 中添加系列。
-- `Season`: 季度代码，网页端会从 Sonarr 获取所有季度，并显示其监视状态。
-- `Language`: 语言，为剧集对应语言的英文名，如 `Chinese`，需要符合系列所需的语言设定，否则无法被 Sonarr 抓取。
-- `Quality`: 质量，可用的值可以参考 [Sonarr 源码](https://github.com/Sonarr/Sonarr/blob/develop/src/NzbDrone.Core/Parser/QualityParser.cs) ，Sonarr 似乎不支持对 RSS 推送的项目自动检测质量，网页端默认填写的值为 `WEBDL 1080p`。
+- `Remote`: Remote address, that is, the RSS feed address of Nyaa Anime, optional.
+- `Pattern`: title template, only items matching at least one item will be returned, the template itself is a [regular expression](https://en.wikipedia.org/wiki/Regular_expression), the expression needs to contain [name capture Groups](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Groups_and_Ranges) (i.e. `(?<episode>\d+)` ) for episode information.
+- `Series`: series name, the web page will get all series names from Sonarr, if the desired series is not found, you may need to add the series in Sonarr first.
+- `Season`: Season code, the web side will get all seasons from Sonarr and display their monitoring status.
+- `Language`: language, which is the English name of the language corresponding to the episode, such as `Chinese`, which needs to meet the language settings required by the series, otherwise it cannot be captured by Sonarr.
+- `Quality`: quality, available values ​​can refer to [Sonarr source code](https://github.com/Sonarr/Sonarr/blob/develop/src/NzbDrone.Core/Parser/QualityParser.cs), Sonarr doesn't seem to support it The quality of the items pushed by RSS is automatically detected, and the default value on the web page is `WEBDL 1080p`.
 
-在创建和编辑页面中，侧边栏会自动根据 *Remote* 字段中的地址获取 RSS 推送中的项目，并高亮显示与模板所匹配的项目：
+In create and edit pages, the sidebar will automatically fetch the items in the RSS feed based on the address in the *Remote* field, and highlight the items that match the template:
 
-![Nyaarr 网页端截图](images/screenshot2.png)
+![Nyaarr web screenshot](images/screenshot2.png)
 
-注意， `Pattern` 的内容为 **正则表达式** ，而种子标题中常见的 `[]` 为正则表达式中的特殊字符，需要进行转义处理，你可以点击输入框后的 ESCAPE 按钮快速转义输入框中的内容，或点击 EPISODE 按钮快速复制剧集的命名捕获组。
+Note that the content of `Pattern` is **regular expression**, and the common `[]` in the seed title is a special character in the regular expression, which needs to be escaped, you can click the ESCAPE button after the input box Quickly escape the contents of the input box, or click the EPISODE button to quickly copy the episode's regex rule.
 
-举例说明，如果你想要抓取的剧集标题为：
+For example, if the episode title you want to grab is:
 
-```
-[Lilith-Raws] 如果究极进化的完全沉浸 RPG 比现实还更像垃圾游戏的话 / Full Dive - 03 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]
-```
+````
+[Lilith-Raws] If Ultimate Evolved Fully Immersive RPGs Are More Like Junk Games Than Reality / Full Dive - 03 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]
+````
 
-将其黏贴到输入框后点击 ESCAPE，你会得到：
+Paste it into the input box and hit ESCAPE, you will get:
 
-```
-\[Lilith-Raws\] 如果究极进化的完全沉浸 RPG 比现实还更像垃圾游戏的话 / Full Dive - 03 \[Baha\]\[WEB-DL\]\[1080p\]\[AVC AAC\]\[CHT\]\[MP4\]
-```
+````
+\[Lilith-Raws\] If Ultimate Evolution's fully immersive RPG is more of a trash game than reality/ Full Dive - 03 \[Baha\]\[WEB-DL\]\[1080p\]\[AVC AAC\ ]\[CHT\]\[MP4\]
+````
 
-然后点击 EPISODE ，将框内的 `03` 替换为复制的内容，得到：
+Then click EPISODE , replace the `03` in the box with the copied content, and get:
 
-```
-\[Lilith-Raws\] 如果究极进化的完全沉浸 RPG 比现实还更像垃圾游戏的话 / Full Dive - (?<episode>\d+) \[Baha\]\[WEB-DL\]\[1080p\]\[AVC AAC\]\[CHT\]\[MP4\]
-```
+````
+\[Lilith-Raws\] If Ultimate Evolution's fully immersive RPG is more of a garbage game than reality/ Full Dive - (?<episode>\d+) \[Baha\]\[WEB-DL\]\[1080p \]\[AVC AAC\]\[CHT\]\[MP4\]
+````
 
-再正确填入其他字段，你就完成了一条抓取模板的编辑。
+Fill in the other fields correctly, and you have completed editing a grab template.
 
-当然，更方便的方法是找到 Nyaa Anime 上对应的 RSS 推送地址，填入 *Remote* 字段后，在侧边栏中选择所需的条目，即可完成前两步操作。
+Of course, a more convenient method is to find the corresponding RSS push address on Nyaa Anime, fill in the *Remote* field, and select the desired entry in the sidebar to complete the first two steps.
 
 ---
 
-为了获取变换后的的 RSS 推送，你可以将 Nyaa Anime 的域名部分（`nyaani.me`）直接替换为 Nyaarr 部署的域名，比如从：
+To get the transformed RSS feed, you can replace the domain name part of Nyaa Anime (`nyaa.si`) directly with the domain name deployed by Nyaarr, for example from:
 
-```
+````
 https://nyaa.si/?page=rss&c=1_3&f=0
-```
+````
 
-得到：
+get:
 
-```
-https://<Nyaarr域名>/?page=rss&c=1_3&f=0
-```
+````
+https://<Nyaarr domain name>/?page=rss&c=1_3&f=0
+````
 
-将这一地址添加到 Sonarr 中，就能让他自动抓取你想要的剧集了，酷吧？
+Add this address to Sonarr and it will automatically grab the episodes you want, cool?
 
-如果你填入了 *Remote* 字段，也可以点击 *PROXY* 按钮一键拷贝。
+If you fill in the *Remote* field, you can also click the *PROXY* button to copy it with one click.
 
-## 其他
+## Other
 
-### 部署
+### Deployment
 
-你可以使用 [Docker](https://www.docker.com/) 进行部署，我们的 Docker Image 在 [`triatk/nyaarr`](https://hub.docker.com/r/triatk/nyaarr) 。
+You can deploy using [Docker](https://www.docker.com/), our Docker Image is at [`triatk/nyaarr`](https://hub.docker.com/r/triatk/nyaarr) .
 
-构建得到的镜像不包含 `.env` 文件，你需要把它放入下面的 `data/` 文件夹。
+The resulting image does not contain a `.env` file, you need to put it in the `data/` folder below.
 
-此外，数据文件不应包含在 Docker Image 和 Docker Container 中，你应当从宿主机将数据文件夹 `data/` 挂载到容器中的 `/data` 。
+Also, data files should not be included in Docker Image and Docker Container, you should mount the data folder `data/` from the host to `/data` in the container.
 
-如果你使用 `docker-compose` ，这里有一份 `docker-compose.yml` 模板：
+If you use `docker-compose` , here is a `docker-compose.yml` template:
 
-```yaml
+````yaml
 version: "3"
 
 services:
@@ -131,49 +129,49 @@ services:
     expose:
       - 12306/tcp
     restart: unless-stopped
-```
+````
 
-这会使用同一份 `.env` 文件启动应用。
+This will start the application using the same `.env` file.
 
-### 安全
+### Safety
 
-- `/RSS` 开头的路径会用于转换 RSS 推送。
-- `/proxy` 用于允许前端请求 Nyaa Anime 的 RSS 推送地址，仅允许请求 `https://nyaa.si` 域名下的 URL 。
-- `/sonarr` 用于反代对 Sonarr API 的请求，避免客户端保存 API Key 。
-- `/api` 开头的路径用于访问和操作数据。
-- 其他地址会得到 `build/` 下的对应静态文件，未找到则会得到 `index.html` 。由于前端使用了 Hash Router ，所有前端 HTML 请求应当仅访问 `/` 路径。
+- Paths starting with `/RSS` will be used to convert RSS feeds.
+- `/proxy` is used to allow the front end to request Nyaa Anime's RSS push address, only URLs under the `https://nyaa.si` domain name are allowed to be requested.
+- `/sonarr` is used to reverse the request to the Sonarr API to avoid the client saving the API Key.
+- Paths starting with `/api` are used to access and manipulate data.
+- Other addresses will get the corresponding static files under `build/`, if not found, it will get `index.html` . Since the frontend uses the Hash Router, all frontend HTML requests should only access the `/` path.
 
-考虑到实现的简单性，我们并没有对服务器进行访问控制，你可以基于上面的描述自行添加访问控制，比如 [HTTP Basic Auth](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication) 。其中 `/RSS` 下的路径需要由 Sonarr 访问，无法使用 HTTP Auth ，且不会直接暴露用户数据，可以考虑不进行访问控制。
+Considering the simplicity of implementation, we do not have access control on the server, you can add access control based on the above description, such as [HTTP Basic Auth](https://developer.mozilla.org/en-US/docs/ Web/HTTP/Authentication). The path under `/RSS` needs to be accessed by Sonarr, HTTP Auth cannot be used, and user data will not be directly exposed, so no access control can be considered.
 
-### 开发
+### Development
 
-我们使用同一个 `package.json` 同时覆盖前端和后端代码，这不是良好的实践，但很方便。
+We use the same `package.json` to cover both front-end and back-end code, which is not good practice, but convenient.
 
-除此之外，以下文件构成一个基本的 [`create-react-app`](https://create-react-app.dev/) 应用：
+Beyond that, the following files make up a basic [`create-react-app`](https://create-react-app.dev/) application:
 
-```
+````
 src/
 public/
-build/   （构建得到）
-```
+build/ (build gets)
+````
 
-以下文件仅为后端代码使用：
+The following files are only used by the backend code:
 
-```
-server/  
-data/   （数据文件）
-.env    （配置文件）
-```
+````
+server/
+data/ (data file)
+.env (configuration file)
+````
 
-进行前端开发时，你可以使用 `yarn dev:web` ，它使用 `react-scripts dev` 在本地启动一个 Dev Server 。
+For front-end development, you can use `yarn dev:web` , which uses `react-scripts dev` to start a Dev Server locally.
 
-为了访问后端 API ，前端开发时需要有一个运行中的后端服务器，你可以使用 `yarn dev:server` 或者直接 `yarn start` 来启动一个。我们假定开发时的后端地址为 `http://localhost:12306` ，你也可以更改 `package.json` 中的 `proxy` 字段来更改。
+In order to access the backend API, front-end development requires a running backend server, you can use `yarn dev:server` or directly `yarn start` to start one. We assume that the backend address for development is `http://localhost:12306` , you can also change the `proxy` field in `package.json` to change.
 
-`yarn dev:server` 也用于开发后端代码，它会使用 [`nodemon`](https://nodemon.io/) 监听 `server/` 中的文件，当文件改变时自动重启服务器。开发后端时不需要运行中的前端实例。
+`yarn dev:server` is also used to develop backend code. It will use [`nodemon`](https://nodemon.io/) to listen to files in `server/` and automatically restart the server when the file changes. A running instance of the frontend is not required to develop the backend.
 
-构建完成之后后端服务器会直接 serve 前端代码，届时只需要 `yarn start` 启动一份。
+After the build is completed, the back-end server will serve the front-end code directly, and then only `yarn start` is needed to start one copy.
 
-## 作者
+## Author
 
 Xavier Xiong - [Homepage](https://github.com/zx900930)
 
