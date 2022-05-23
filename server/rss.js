@@ -28,9 +28,9 @@ const route = async (req, res) => {
     for (const item of result.rss.channel[0].item) {
       const {
         title: [title],
-        enclosure,
+        pubDate,
         link,
-        torrent: [{ pubDate }],
+        guid,
       } = item;
       for (const { pattern, series, season, language, quality, offset } of rules) {
         const match = title.match(pattern);
@@ -42,14 +42,8 @@ const route = async (req, res) => {
         items.push({
           title: [normalized],
           pubDate,
-          enclosure,
           link,
-          guid: [
-            {
-              $: { isPermaLink: true },
-              _: link[0],
-            },
-          ],
+          guid,
         });
         break;
       }
