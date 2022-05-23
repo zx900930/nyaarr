@@ -13,7 +13,7 @@ const baseurl = process.env.BASE_URL
 const route = async (req, res) => {
   try {
     const { data: xmlStr } = await axios.get(
-      `${baseurl}${req.path}?${qs.stringify(req.query)}`
+      `${baseurl}/?${qs.stringify(req.query)}`
     );
     const result = await parser.parseStringPromise(xmlStr);
 
@@ -59,4 +59,4 @@ const route = async (req, res) => {
 
 const server = require('./server');
 
-server.get("/nyaa.si/*", route);
+server.get("/RSS/*", route);

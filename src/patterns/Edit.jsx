@@ -127,7 +127,6 @@ const ProxyButton = () => {
   const state = useFormState();
   const remote = state.values?.remote ?? "";
   const notify = useNotify();
-  const baseurl = process.env.BASE_URL
 
   return (
     <Button
@@ -136,9 +135,10 @@ const ProxyButton = () => {
         if (!remote) {
           notify("No remote link to proxy");
         } else {
+          const baseurl = 'https://nyaa.si'
           const proxy = remote.replace(
             `${baseurl}`,
-            `${location.protocol}//${location.host}`
+            `${location.protocol}//${location.host}/RSS`
           );
           clipboard.copy(proxy);
           notify("Proxied RSS link copied");

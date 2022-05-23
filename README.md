@@ -96,7 +96,7 @@ https://nyaa.si/?page=rss&c=1_3&f=0
 get:
 
 ````
-https://<Nyaarr domain name>/?page=rss&c=1_3&f=0
+https://<Nyaarr domain name>/RSS/?page=rss&c=1_3&f=0
 ````
 
 Add this address to Sonarr and it will automatically grab the episodes you want, cool?
@@ -135,7 +135,7 @@ This will start the application using the same `.env` file.
 
 ### Safety
 
-- Paths starting with `/?page=rss` will be used to convert RSS feeds.
+- Paths starting with `/RSS` will be used to convert RSS feeds.
 - `/proxy` is used to allow the front end to request Nyaa Anime's RSS feed, only URLs under the `https://nyaa.si` domain name are allowed to be requested.
 - `/sonarr` is used to reverse the request to the Sonarr API to avoid the client saving the API Key.
 - Paths starting with `/api` are used to access and manipulate data.
