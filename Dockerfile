@@ -6,7 +6,7 @@ COPY yarn.lock ./
 COPY public ./public
 COPY server ./server
 COPY src ./src
-RUN yarn install --network-timeout 100000
+RUN yarn install --network-timeout 500000
 RUN yarn build
 RUN chmod 755 ./index-*
 
