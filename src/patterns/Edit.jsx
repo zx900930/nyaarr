@@ -289,7 +289,7 @@ const PatternCreate = (props) => {
   return (
     <BusProvider>
       <Create {...props} aside={<Aside />}>
-        <SimpleForm initialValues={patternDefaultValue} fluid>
+        <SimpleForm initialValues={patternDefaultValue} >
           <TextInput disabled source="id" />
           <RemoteInput />
           <PatternInput />

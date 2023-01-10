@@ -19,8 +19,8 @@
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
-    "@mui/material": "^5.11.3",
-    "@mui/styles": "^5.11.2",
+    "@mui/material": "^5.2.7",
+    "@mui/styles": "^5.2.3",
     "axios": "^0.24.0",
     "clsx": "^1.1.1",
     "dotenv-cli": "^4.0.0",
@@ -51,7 +51,7 @@
     "react-scripts": "^5.0.0"
   },
   "resolutions": {
-    "react-admin/@material-ui/core": "^4.12.4"
+    "react-admin/@material-ui/core": "^4.12.1"
   },
   "browserslist": {
     "production": [
